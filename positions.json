@@ -8,5 +8,17 @@
     "target_1": 73.01,
     "target_2": 75.22,
     "strategy": "🔥 [매수-전략2: 박스권 상단 돌파]"
+  },
+  "UPRO": {
+    "name": "S&P 500 3배 레버리지 ETF",
+    "entry_date": "2026-10-25",
+    "entry_price": 144.04,
+    "highest_price": 144.04,
+    "stop_loss": 134.76,
+    "target_1": 154.58,
+    "target_2": 160.91,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 70,
+    "extended_once": false
   }
 }
