@@ -1,0 +1,14 @@
+# Python 가상환경 및 캐시 제외
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# 민감한 API 키 환경변수 제외
+.env
+
+# OS 및 에디터 임시 파일
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
