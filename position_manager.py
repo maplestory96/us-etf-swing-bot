@@ -5,36 +5,46 @@ AI 뉴스 판단(매수 거부권 BUY_VETO, 홀딩 연장 HOLD_EXTEND, 조기 �
 import json
 import os
 from datetime import datetime
+from typing import Any
 from technical_analyzer import SwingSignalResult
 from ai_news_analyzer import AINewsVerdict
 
-POSITIONS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "positions.json")
+POSITIONS_FILE_US = os.path.join(os.path.dirname(os.path.abspath(__file__)), "positions.json")
+POSITIONS_FILE_KR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "positions_kr.json")
 
 
-def load_positions() -> dict:
-    if not os.path.exists(POSITIONS_FILE):
+def get_position_file(market: str = "us") -> str:
+    return POSITIONS_FILE_KR if market.lower() == "kr" else POSITIONS_FILE_US
+
+
+def load_positions(market: str = "us") -> dict:
+    filepath = get_position_file(market)
+    if not os.path.exists(filepath):
         return {}
     try:
-        with open(POSITIONS_FILE, "r", encoding="utf-8") as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception:
         return {}
 
 
-def save_positions(positions: dict) -> None:
+def save_positions(positions: dict, market: str = "us") -> None:
+    filepath = get_position_file(market)
     try:
-        with open(POSITIONS_FILE, "w", encoding="utf-8") as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             json.dump(positions, f, ensure_ascii=False, indent=2)
     except Exception as e:
-        print(f"[경고] 포지션 파일 저장 실패: {e}")
+        print(f"[경고] {market} 포지션 파일 저장 실패: {e}")
+
 
 
 def update_positions_after_scan(
     positions: dict,
-    sig: SwingSignalResult,
+    sig: Any,
     buy_ai: AINewsVerdict | None = None,
     sell_ai: AINewsVerdict | None = None,
 ) -> None:
+
     """
     1) 보유 중인 종목:
        - 매도 시그널 발생 시 AI가 'HOLD_EXTEND'(호재로 50%만 익절 후 홀딩 연장) 판정을 내리면 포지션의 50%를 유지하고 손절선을 본절(진입가)로 상향!
