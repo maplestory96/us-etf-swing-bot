@@ -51,6 +51,32 @@ ETF_UNIVERSE = {
     "XLY": {"name": "임의소비재 섹터 ETF", "category": "전통섹터(1x)", "mode": "MACRO_CYCLE"},
 }
 
+# -------------------------------------------------------------------------
+# 국내(한국장) 대표 ETF 11종 유니버스 및 5년 백테스트 검증 챔피언 전략 배정
+# -------------------------------------------------------------------------
+# - KR_PULLBACK_PRO   : [K-추세 눌림목 프로] 200일선 우상향 필터 + 20/60선 지지반등 + 스토캐스틱 K>D + 트레일링스탑
+# - KR_BB_SQUEEZE     : [K-볼린저 수축 돌파] 밴드폭 극도 수축(스퀴즈) 후 거래량 1.3배 폭발 상단 돌파
+# - KR_OVERSOLD_REBOUND: [K-원자재/매크로 과매도 반등] RSI(14) 35이하/괴리율 침체 후 5일선 양봉 회복
+# - KR_PULLBACK_CLASSIC: [K-이평선 눌림목 클래식] 60일선 위 20일선 눌림목 반등 (코스닥 레버리지 특화)
+KOREAN_ETF_UNIVERSE = {
+    # 1. 지수 및 레버리지 (200일선 필터 추세 눌림목 챔피언)
+    "069500.KS": {"name": "KODEX 200", "category": "국내지수(1x)", "strategy": "KR_PULLBACK_PRO", "memo": "MDD -6.9% 극강 방어"},
+    "122630.KS": {"name": "KODEX 레버리지", "category": "국내지수(2x)", "strategy": "KR_PULLBACK_PRO", "memo": "5년 +136.1% (MDD -13%)"},
+    "229200.KS": {"name": "KODEX 코스닥150", "category": "코스닥지수(1x)", "strategy": "KR_PULLBACK_PRO", "memo": "승률 64.3% (MDD -8.3%)"},
+    "233740.KS": {"name": "KODEX 코스닥150레버리지", "category": "코스닥지수(2x)", "strategy": "KR_PULLBACK_CLASSIC", "memo": "단순보유 폭락 회피"},
+
+    # 2. 주도 & 사이클 섹터 (반도체/2차전지/은행/헬스케어)
+    "091160.KS": {"name": "KODEX 반도체", "category": "주도섹터", "strategy": "KR_PULLBACK_PRO", "memo": "5년 +71.2% (MDD -10.8%)"},
+    "305540.KS": {"name": "TIGER 2차전지테마", "category": "사이클섹터", "strategy": "KR_BB_SQUEEZE", "memo": "승률 80.0% / PF 7.64 (MDD -5.6%)"},
+    "091170.KS": {"name": "KODEX 은행", "category": "가치섹터", "strategy": "KR_OVERSOLD_REBOUND", "memo": "승률 63.0% 과매도 스나이핑"},
+    "143860.KS": {"name": "TIGER 헬스케어", "category": "성장섹터", "strategy": "KR_OVERSOLD_REBOUND", "memo": "승률 61.0% 반등 스나이핑"},
+
+    # 3. 원자재 및 환율/헤지 (골드/원유/달러)
+    "132030.KS": {"name": "KODEX 골드선물(H)", "category": "원자재/안전자산", "strategy": "KR_BB_SQUEEZE", "memo": "승률 75.0% / PF 5.98 (MDD -3.0%)"},
+    "261220.KS": {"name": "KODEX WTI원유선물(H)", "category": "원자재/에너지", "strategy": "KR_OVERSOLD_REBOUND", "memo": "5년 +86.7% / 승률 63.3%"},
+    "261240.KS": {"name": "KODEX 미국달러선물", "category": "환율/헤지", "strategy": "KR_BB_SQUEEZE", "memo": "승률 62.5% / MDD -2.3%"},
+}
+
 # 스윙 전략 기본 파라미터
 STRATEGY_PARAMS = {
     # 1. 과매도 반등 (Oversold Bounce)
@@ -66,3 +92,4 @@ STRATEGY_PARAMS = {
     "atr_target_1_multiplier": 2.5,   # 1차 목표가: 진입가 + (2.5 * ATR)
     "atr_target_2_multiplier": 4.0,   # 2차 목표가: 진입가 + (4.0 * ATR)
 }
+
