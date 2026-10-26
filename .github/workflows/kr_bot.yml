@@ -1,0 +1,46 @@
+name: KR ETF Swing AI Bot
+
+on:
+  # 한국 정규장 마감 직후 (한국시간 평일 월~금 오후 15:40 KST = UTC 06:40)
+  schedule:
+    - cron: '40 6 * * 1-5'
+
+  # 웹/모바일에서 언제든 버튼 하나로 즉시 실행 가능
+  workflow_dispatch:
+
+permissions:
+  contents: write   # 포지션 추적 파일(positions_kr.json) 자동 커밋 권한
+
+jobs:
+  scan-kr-etfs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run KR ETF Swing Scanner & Send Telegram
+        env:
+          AI_PROVIDER: ${{ secrets.AI_PROVIDER || 'openrouter' }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL || 'https://openrouter.ai/api/v1' }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL || 'deepseek/deepseek-chat-v3-0324:free' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python main.py --market kr
+
+      - name: Save updated positions to repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          [ -f positions_kr.json ] && git add positions_kr.json
+          git diff --staged --quiet || git commit -m "chore: update active KR swing positions [skip ci]"
+          git push
