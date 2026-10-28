@@ -1,1 +1,14 @@
-{}
+{
+  "091170.KS": {
+    "name": "KODEX 은행",
+    "entry_date": "2026-10-28",
+    "entry_price": 14055.0,
+    "highest_price": 14055.0,
+    "stop_loss": 13493.0,
+    "target_1": 15018.0,
+    "target_2": 15179.0,
+    "strategy": "💎 [K-원자재/매크로 과매도 반등 타점 포착]",
+    "weight_pct": 70,
+    "extended_once": false
+  }
+}
