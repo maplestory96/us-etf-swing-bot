@@ -7,11 +7,19 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# API 및 텔레그램 환경변수 로드 (기본값: 결제 필요 없는 OpenRouter 무료 등급)
+# API 및 텔레그램 환경변수 로드 (기본값: openrouter, freellmapi, groq, gemini 등 지원)
 AI_PROVIDER = os.getenv("AI_PROVIDER", "openrouter").strip().lower()
 LLM_API_KEY = os.getenv("LLM_API_KEY", "").strip()
-LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1").strip().rstrip("/")
-LLM_MODEL = os.getenv("LLM_MODEL", "deepseek/deepseek-chat-v3-0324:free").strip()
+
+if AI_PROVIDER == "freellmapi":
+    LLM_BASE_URL = os.getenv("LLM_BASE_URL", "http://localhost:3001/v1").strip().rstrip("/")
+    LLM_MODEL = os.getenv("LLM_MODEL", "auto:smart").strip()
+elif AI_PROVIDER == "groq":
+    LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.groq.com/openai/v1").strip().rstrip("/")
+    LLM_MODEL = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile").strip()
+else:
+    LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1").strip().rstrip("/")
+    LLM_MODEL = os.getenv("LLM_MODEL", "deepseek/deepseek-chat-v3-0324:free").strip()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
