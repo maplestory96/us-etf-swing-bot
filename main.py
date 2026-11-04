@@ -62,10 +62,16 @@ def format_report(
                 f"\n   └ 💡 맞춤 전략: {sig.exit_guide}"
             )
             lines.append(
-                f"• 🤖 AI 뉴스 매수 보조 판단: {ai_res.verdict} (뉴스감성: {ai_res.sentiment_score:+d}/5)"
+                f"• 🤖 [AI 리스크 심의 위원회(TradingAgents 하이브리드)] — {ai_res.verdict}"
             )
-            lines.append(f"   ├ 뉴스 요약: {ai_res.news_summary_kr}")
-            lines.append(f"   └ AI 행동 지침: {ai_res.swing_advice_kr}")
+            if getattr(ai_res, "bull_argument", ""):
+                lines.append(f"   ├ 🐂 Bull (반등 근거): {ai_res.bull_argument}")
+            if getattr(ai_res, "bear_argument", ""):
+                lines.append(f"   ├ 🐻 Bear (리스크 경고): {ai_res.bear_argument}")
+            if getattr(ai_res, "risk_assessment", ""):
+                lines.append(f"   ├ ⚖️ CRO (심의 결과): {ai_res.risk_assessment}")
+            lines.append(f"   ├ 📰 뉴스 요약: {ai_res.news_summary_kr}")
+            lines.append(f"   └ 🎯 최종 행동 지침: {ai_res.swing_advice_kr}")
             lines.append("-" * 42)
     else:
         lines.append("  • 현재 신규 매수 진입 조건에 부합하는 미국 ETF가 없습니다.")
@@ -81,10 +87,16 @@ def format_report(
             for r_text in sig.sell_reasons:
                 lines.append(f"• 매도 근거: {r_text}")
             lines.append(
-                f"• 🤖 AI 뉴스 매도 보조 판단: {ai_res.verdict} (뉴스감성: {ai_res.sentiment_score:+d}/5)"
+                f"• 🤖 [AI 리스크 심의 위원회(TradingAgents 하이브리드)] — {ai_res.verdict}"
             )
-            lines.append(f"   ├ 뉴스 요약: {ai_res.news_summary_kr}")
-            lines.append(f"   └ AI 행동 지침: {ai_res.swing_advice_kr}")
+            if getattr(ai_res, "bull_argument", ""):
+                lines.append(f"   ├ 🐂 Bull (반등/보유 근거): {ai_res.bull_argument}")
+            if getattr(ai_res, "bear_argument", ""):
+                lines.append(f"   ├ 🐻 Bear (리스크 경고): {ai_res.bear_argument}")
+            if getattr(ai_res, "risk_assessment", ""):
+                lines.append(f"   ├ ⚖️ CRO (심의 결과): {ai_res.risk_assessment}")
+            lines.append(f"   ├ 📰 뉴스 요약: {ai_res.news_summary_kr}")
+            lines.append(f"   └ 🎯 최종 행동 지침: {ai_res.swing_advice_kr}")
             lines.append("-" * 42)
     else:
         lines.append("  • 현재 매도(익절/손절/추세이탈/악재경보) 시그널이 발생한 종목이 없습니다.")
@@ -152,9 +164,17 @@ def format_kr_report(
                 f"\n   └ 💡 챔피언 청산 원칙: {sig.exit_guide}"
             )
             if ai_res:
-                lines.append(f"• 🤖 AI 뉴스 보조 판단: {ai_res.verdict}")
-                lines.append(f"   ├ 뉴스 요약: {ai_res.news_summary_kr}")
-                lines.append(f"   └ 행동 지침: {ai_res.swing_advice_kr}")
+                lines.append(
+                    f"• 🤖 [AI 리스크 심의 위원회(TradingAgents 하이브리드)] — {ai_res.verdict}"
+                )
+                if getattr(ai_res, "bull_argument", ""):
+                    lines.append(f"   ├ 🐂 Bull (반등 근거): {ai_res.bull_argument}")
+                if getattr(ai_res, "bear_argument", ""):
+                    lines.append(f"   ├ 🐻 Bear (리스크 경고): {ai_res.bear_argument}")
+                if getattr(ai_res, "risk_assessment", ""):
+                    lines.append(f"   ├ ⚖️ CRO (심의 결과): {ai_res.risk_assessment}")
+                lines.append(f"   ├ 📰 뉴스 요약: {ai_res.news_summary_kr}")
+                lines.append(f"   └ 🎯 행동 지침: {ai_res.swing_advice_kr}")
             lines.append("-" * 44)
     else:
         lines.append("  • 현재 엄격한 국장 챔피언 매수 기준에 부합하는 ETF가 없습니다.")
