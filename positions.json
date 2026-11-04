@@ -21,42 +21,6 @@
     "weight_pct": 70,
     "extended_once": false
   },
-  "QQQ": {
-    "name": "나스닥 100 지수 ETF",
-    "entry_date": "2026-11-03",
-    "entry_price": 681.09,
-    "highest_price": 681.09,
-    "stop_loss": 647.6,
-    "target_1": 719.15,
-    "target_2": 741.99,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
-  "SMH": {
-    "name": "반에크 반도체 ETF",
-    "entry_date": "2026-11-03",
-    "entry_price": 508.31,
-    "highest_price": 508.31,
-    "stop_loss": 460.51,
-    "target_1": 562.63,
-    "target_2": 595.22,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
-  "XLK": {
-    "name": "기술주 섹터 ETF",
-    "entry_date": "2026-11-03",
-    "entry_price": 174.22,
-    "highest_price": 174.22,
-    "stop_loss": 162.8,
-    "target_1": 187.2,
-    "target_2": 194.99,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
   "ARKK": {
     "name": "아크 혁신 테마 ETF",
     "entry_date": "2026-11-03",
@@ -65,42 +29,6 @@
     "stop_loss": 71.88,
     "target_1": 87.01,
     "target_2": 91.84,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
-  "UPRO": {
-    "name": "S&P 500 3배 레버리지 ETF",
-    "entry_date": "2026-11-03",
-    "entry_price": 139.14,
-    "highest_price": 139.14,
-    "stop_loss": 127.64,
-    "target_1": 152.21,
-    "target_2": 160.05,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
-  "GLD": {
-    "name": "금 현물 ETF",
-    "entry_date": "2026-11-03",
-    "entry_price": 361.65,
-    "highest_price": 361.65,
-    "stop_loss": 348.08,
-    "target_1": 377.07,
-    "target_2": 386.32,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
-  "USO": {
-    "name": "WTI 원유 선물 ETF",
-    "entry_date": "2026-11-03",
-    "entry_price": 156.87,
-    "highest_price": 156.87,
-    "stop_loss": 144.88,
-    "target_1": 170.5,
-    "target_2": 178.67,
     "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
     "weight_pct": 70,
     "extended_once": false
