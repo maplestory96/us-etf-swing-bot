@@ -1,31 +1,9 @@
 {
-  "XLE": {
-    "name": "에너지 섹터 ETF",
-    "entry_date": "2026-10-25",
-    "entry_price": 69.33,
-    "highest_price": 69.64,
-    "stop_loss": 66.09,
-    "target_1": 73.01,
-    "target_2": 75.22,
-    "strategy": "🔥 [매수-전략2: 박스권 상단 돌파]"
-  },
-  "SPY": {
-    "name": "S&P 500 지수 ETF",
-    "entry_date": "2026-11-03",
-    "entry_price": 752.1,
-    "highest_price": 752.1,
-    "stop_loss": 732.36,
-    "target_1": 774.53,
-    "target_2": 787.99,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
   "ARKK": {
     "name": "아크 혁신 테마 ETF",
     "entry_date": "2026-11-03",
     "entry_price": 78.96,
-    "highest_price": 78.96,
+    "highest_price": 80.29,
     "stop_loss": 71.88,
     "target_1": 87.01,
     "target_2": 91.84,
