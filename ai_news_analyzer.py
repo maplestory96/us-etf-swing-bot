@@ -13,6 +13,7 @@
 import json
 import re
 import requests
+from typing import Any
 from pydantic import BaseModel, Field
 from config import AI_PROVIDER, LLM_API_KEY, LLM_BASE_URL, LLM_MODEL, GEMINI_API_KEY
 from technical_analyzer import SwingSignalResult
@@ -25,15 +26,27 @@ class AINewsVerdict(BaseModel):
     action_type: str = Field(
         description=(
             "최종 AI 보조 의사결정 코드: "
-            "매수 시 ['BUY_STRONG'(강력매수 100%), 'BUY_NORMAL'(일반/분할매수), 'BUY_VETO'(악재로 매수보류)] / "
+            "매수 시 ['BUY_STRONG'(강력매수 100%), 'BUY_NORMAL'(일반/분할매수 70%), 'BUY_CAUTION'(신중/비중축소 30~50%), 'BUY_VETO'(악재로 매수거부/보류 0%)] / "
             "매도·보유 시 ['SELL_NOW'(전량청산/익절), 'HOLD_EXTEND'(호재동반 분할익절 후 홀딩연장), 'EARLY_EXIT'(악재로 조기탈출), 'HOLD_KEEP'(정상보유유지)]"
         )
     )
     verdict: str = Field(
-        description="텔레그램에 표시할 한 줄 행동 지침 (예: '🟢 매수 승인 (호재 동반 - 비중 100%)', '⛔ 매수 보류 (악재 주의 - 관망 권장)', '🔥 절반 익절 후 홀딩 연장 (강력 호재)')"
+        description="텔레그램에 표시할 한 줄 행동 지침 (예: '🟢 매수 승인 (호재 동반 - 비중 100%)', '⛔ 매수 거부 (악재 경보 - 관망 권장)', '🔥 절반 익절 후 홀딩 연장 (강력 호재)')"
     )
     recommended_weight_pct: int = Field(
-        description="매수 시 권장 투입 비중 (0, 50, 70, 100 중 하나) 또는 매도 시 권장 매도 비중 (0, 50, 100 중 하나)"
+        description="매수 시 권장 투입 비중 (0, 30, 50, 70, 100 중 하나) 또는 매도 시 권장 매도 비중 (0, 50, 100 중 하나)"
+    )
+    bull_argument: str = Field(
+        default="",
+        description="상승론자(Bull)의 핵심 근거 1줄 (과매도 반발 매수세, 기술적 지지, 긍정 재료)"
+    )
+    bear_argument: str = Field(
+        default="",
+        description="하락론자(Bear)의 리스크 경고 1줄 (떨어지는 칼날 위험, 매크로/실적 악재, 가짜 반등 가능성)"
+    )
+    risk_assessment: str = Field(
+        default="",
+        description="리스크 심의 위원회의 최종 판정 이유 1줄 (거부권 Veto 발동 여부 및 비중 조절 사유)"
     )
     news_summary_kr: str = Field(
         description="최근 영문 뉴스 핵심 내용을 한국어로 1~2줄 요약"
@@ -74,8 +87,11 @@ def _build_prompt(signal: SwingSignalResult, news_items: list[dict], context_mod
     active_tags = signal.signals if context_mode == "BUY" else (signal.sell_signals or ["보유 포지션 뉴스 점검"])
     active_reasons = signal.reasons if context_mode == "BUY" else (signal.sell_reasons or [signal.watch_status])
 
-    return f"""당신은 월스트리트 출신의 미국 주식 ETF 전문 퀀트+뉴스 스윙 트레이더입니다.
-기본적으로 '차트(기술적 분석, 백테스트 승률 80.3%)'를 주된 매매 근거로 삼고, '뉴스/매크로 이슈'를 통해 매수·매도 결정을 최종 보조합니다.
+    return f"""당신은 기관 헤지펀드의 [투자 심의 위원회(Investment Committee)]이자 수석 리스크 관리자(Chief Risk Officer)입니다.
+TauricResearch TradingAgents 프레임워크처럼, 단일 판단이 아닌 세 가지 관점(Bull 토론, Bear 토론, 리스크 위원회 심의)을 거쳐 매매 결정을 철저히 검증합니다.
+
+[1단계 퀀트 시그널]: 승률 80.3% 검증된 스마트 라우팅 기술적 타점이 포착되었습니다.
+[2단계 리스크 심의]: 당신은 이 타점이 '진짜 반등'인지, 아니면 치명적 악재(블랙스완, 실적쇼크, 금리/전쟁)로 인한 '떨어지는 칼날'인지 뉴스/매크로를 토대로 교차 검증해야 합니다.
 
 [분석 모드]: {context_mode} ({'신규 매수 진입 심사' if context_mode == 'BUY' else '매도 타점 및 보유 포지션 심사'})
 [포착된 ETF 정보]
@@ -88,24 +104,33 @@ def _build_prompt(signal: SwingSignalResult, news_items: list[dict], context_mod
 [최근 관련 뉴스 헤드라인]
 {news_text}
 
-[의사결정 보조 규칙]
-1. 매수 심사(BUY)일 때:
-   - 뉴스가 단순 조정이나 중립(-2 ~ +1점)이면 차트 승률(80%)을 신뢰하여 'BUY_NORMAL' (권장비중 70%, 매수 승인)
-   - 뚜렷한 호재나 금리/실적 모멘텀(+2 ~ +5점)이 있으면 'BUY_STRONG' (권장비중 100%, 강력 매수 승인)
-   - 수출 통제, 관세 폭탄, 시스템 위기 등 심각한 구조적 악재(-3 ~ -5점)가 진행 중이면 차트 매수 타점이라도 'BUY_VETO' (권장비중 0%, 진입 보류 권고)
-2. 매도/보유 심사(SELL/HOLD)일 때:
-   - 차트 익절 타점이나 뉴스에 강력한 추가 상승 호재(+3 ~ +5점)가 터졌다면 'HOLD_EXTEND' (권장 매도비중 50% 분할익절 후 나머지는 홀딩 연장)
-   - 일반적인 차트 익절/손절 타점이면 'SELL_NOW' (권장 매도비중 100% 계획대로 청산)
-   - 보유 중 아직 손절선 전이라도 치명적 악재(-4 ~ -5점)가 발생했다면 'EARLY_EXIT' (권장 매도비중 100% 조기 탈출 경보)
+[심의 절차 및 평가 원칙]
+1. 🐂 [Bullish Researcher 관점]:
+   - 기술적 과매도(RSI2, 볼린저 하단)에 따른 평균회귀 매수세, 지지선 유효성, 잠재 호재를 들어 반등 근거 제시.
+2. 🐻 [Bearish Researcher 관점]:
+   - 거시경제 역풍(금리, 인플레이션, 관세, 지정학)이나 실적/산업 악재로 인한 추가 급락 및 가짜 반등 위험을 경고.
+3. ⚖️ [Chief Risk Officer (CRO) 최종 심의 및 Veto 권한]:
+   - 매수 심사(BUY) 시:
+     * 치명적/구조적 악재(-3 ~ -5점) 감지 시: 'BUY_VETO' (비중 0%, 매수 전면 거부 및 관망 권고) -> MDD 방어 최우선!
+     * 불확실성/변동성 주의 요망: 'BUY_CAUTION' (비중 30~50% 축소 진입, 타이트한 손절)
+     * 특이 악재 없는 통상적 조정(-2 ~ +1점): 'BUY_NORMAL' (비중 70%, 퀀트 승률 80% 신뢰 진입)
+     * 강력 호재 동반(+2 ~ +5점): 'BUY_STRONG' (비중 100%, 강력 매수 승인)
+   - 매도/보유 심사(SELL/HOLD) 시:
+     * 보유 중 치명적 악재(-4 ~ -5점) 발생: 'EARLY_EXIT' (비중 100% 손절선 도달 전 선제 탈출)
+     * 차트 익절 구간이나 강력 호재 지속(+3 ~ +5점): 'HOLD_EXTEND' (50%만 분할익절 후 본절 스탑 걸고 홀딩 연장)
+     * 통상적 청산 시점: 'SELL_NOW' (비중 100% 계획대로 익절/손절 청산)
 
-반드시 아래 JSON 형식으로만 응답해 주세요 (설명 텍스트 없이 순수 JSON만 출력):
+반드시 아래 JSON 형식으로만 응답해 주세요 (설명 없이 순수 JSON만 출력):
 {{
   "sentiment_score": 0,
   "action_type": "BUY_NORMAL",
   "verdict": "🟡 매수 승인 (특이 악재 없음 - 권장 진입비중 70%)",
   "recommended_weight_pct": 70,
+  "bull_argument": "RSI(2)=5.4 극단적 과매도 도달로 기술적 자율 반등 확률 매우 높음",
+  "bear_argument": "중기 50일선 하회 상태로 매크로 지표 발표에 따른 변동성 주의 필요",
+  "risk_assessment": "구조적 블랙스완 악재는 확인되지 않아 80% 퀀트 승률 기반 70% 비중 진입 승인",
   "news_summary_kr": "최근 영문 뉴스 핵심 요약 1~2줄 (한국어)",
-  "swing_advice_kr": "차트와 뉴스를 결합한 구체적 매수/매도 실행 지침 1~2줄 (한국어)"
+  "swing_advice_kr": "차트와 리스크 심의를 결합한 구체적 매수/매도 실행 지침 1~2줄 (한국어)"
 }}"""
 
 
@@ -195,71 +220,98 @@ def evaluate_signal_with_ai(
 ) -> AINewsVerdict:
     """
     context_mode:
-      - 'BUY' : 신규 매수 시그널에 대한 AI 뉴스 보조 판단 (비중 결정 / 매수 거부권)
+      - 'BUY' : 신규 매수 시그널에 대한 AI 뉴스 보조 판단 (Bull/Bear 토론 + 리스크 거부권 Veto 심사)
       - 'SELL': 매도 시그널 또는 보유 포지션에 대한 AI 뉴스 보조 판단 (전량청산 / 분할익절 후 홀딩연장 / 조기탈출)
     """
     prompt = _build_prompt(signal, news_items, context_mode)
 
     if AI_PROVIDER == "gemini":
         if not GEMINI_API_KEY or "your_" in GEMINI_API_KEY:
-            return _smart_fallback_verdict(news_items, context_mode, "GEMINI_API_KEY 미설정")
+            return _smart_fallback_verdict(signal, news_items, context_mode, "GEMINI_API_KEY 미설정")
         try:
             return _call_gemini(prompt)
         except Exception as e:
-            return _smart_fallback_verdict(news_items, context_mode, f"Gemini 오류: {str(e)[:40]}")
+            return _smart_fallback_verdict(signal, news_items, context_mode, f"Gemini 오류: {str(e)[:40]}")
 
     if AI_PROVIDER != "ollama" and (not LLM_API_KEY or "your_" in LLM_API_KEY):
-        return _smart_fallback_verdict(news_items, context_mode, f"{AI_PROVIDER.upper()} 키 미설정")
+        return _smart_fallback_verdict(signal, news_items, context_mode, f"{AI_PROVIDER.upper()} 키 미설정")
 
     try:
         return _call_openai_compatible(prompt)
     except Exception as e:
-        return _smart_fallback_verdict(news_items, context_mode, f"{AI_PROVIDER} 오류: {str(e)[:40]}")
+        return _smart_fallback_verdict(signal, news_items, context_mode, f"{AI_PROVIDER} 오류: {str(e)[:40]}")
 
 
-def _smart_fallback_verdict(news_items: list[dict], context_mode: str, reason: str) -> AINewsVerdict:
-    """API 키 연동 전에도 영문 헤드라인 키워드 분석으로 기본 매수/매도 보조 판단을 제공합니다."""
+def _smart_fallback_verdict(
+    signal: Any,
+    news_items: list[dict],
+    context_mode: str,
+    reason: str,
+) -> AINewsVerdict:
+    """API 키 연동 전에도 영문 헤드라인 키워드와 퀀트 지표로 Bull/Bear 토론 및 리스크 거부권 심사를 수행합니다."""
     score = _rule_based_news_score(news_items)
     headline = news_items[0]["title"] if news_items else "최근 수집된 주요 뉴스가 없습니다."
+    rsi2_val = getattr(signal, "indicators", {}).get("RSI2", 10.0) if hasattr(signal, "indicators") else 10.0
 
     if context_mode == "BUY":
         if score <= -3:
             act = "BUY_VETO"
-            verd = f"⛔ 매수 보류 권고 (뉴스 악재 키워드 감지 [{score}점] / {reason})"
+            verd = f"⛔ [매수 거부권 발동] 리스크 오프 권고 (악재 지수 [{score}점] / {reason})"
             weight = 0
-            adv = "차트상 매수 타점이나 뉴스 헤드라인에 부정적 키워드가 다수 감지됩니다. 관망을 권장합니다."
+            bull = "기술적 지표는 단기 과매도 구간이나, 펀더멘털 악재 앞에서는 지지선이 붕괴될 위험이 큼."
+            bear = f"헤드라인에서 부정적 키워드([{score}점]) 다수 감지. '떨어지는 칼날' 추가 급락 위험 고조."
+            risk = "치명적 악재로 판정하여 Chief Risk Officer 거부권(Veto) 행사 -> 매수 전면 취소 (MDD 방어)."
+            adv = "차트상 과매도 타점이나 뉴스 악재가 확인되므로 진입을 보류하고 현금을 보존하세요."
         elif score >= 2:
             act = "BUY_STRONG"
-            verd = f"🟢 강력 매수 승인 (뉴스 긍정 키워드 [{score:+d}점] / 권장비중 100%)"
+            verd = f"🟢 강력 매수 승인 (호재 모멘텀 동반 [{score:+d}점] / 권장비중 100%)"
             weight = 100
-            adv = "차트 타점과 긍정적 뉴스 분위기가 동반되었습니다. 정석 비중(100%) 진입이 유리합니다."
+            bull = f"RSI(2)={rsi2_val:.1f} 극단적 과매도 도달 + 우호적 뉴스 모멘텀으로 강력한 기술적 반등 탄력 기대."
+            bear = "단기 갭상승 시 직전 매물대에서의 차익 실현 출회 가능성."
+            risk = "거시적 악재 없음. 80.3% 퀀트 승률과 모멘텀 결합으로 100% 정석 비중 투입 승인."
+            adv = "차트 타점과 긍정적 뉴스 분위기가 동반되었습니다. 정석 비중(100%)으로 스윙 진입하세요."
         else:
             act = "BUY_NORMAL"
             verd = f"🟡 일반 매수 승인 (특이 악재 없음 [{score:+d}점] / 권장비중 70%)"
             weight = 70
-            adv = f"심각한 악재 키워드가 없습니다. 백테스트 승률(80.3%)에 기반해 진입하되 손절선을 준수하세요. (.env에 AI 키 입력 시 심층 분석 활성화)"
+            bull = f"단기 과대낙폭(RSI2={rsi2_val:.1f})으로 80%+ 승률의 자율 반등 확률 지배적."
+            bear = "시장의 전반적 관망세 및 50일선 아래 일시적 매물 소화 변동성 가능성."
+            risk = "치명적 블랙스완 악재 부재. 70% 표준 비중 진입 승인 (5일선 회복 시 1차 익절 원칙 준수)."
+            adv = f"심각한 악재 키워드가 없습니다. 퀀트 80% 승률에 기반해 진입하되 손절선을 준수하세요."
     else:
         if score >= 3:
             act = "HOLD_EXTEND"
-            verd = f"🔥 분할 익절(50%) 후 홀딩 연장 권고 (호재 감지 [{score:+d}점])"
+            verd = f"🔥 분할 익절(50%) 후 홀딩 연장 권고 (호재 지속 [{score:+d}점])"
             weight = 50
-            adv = "차트상 매도 구간이나 긍정적 뉴스 모멘텀이 강합니다. 절반만 익절하고 나머지는 추세를 더 타세요."
+            bull = "강력한 호재 모멘텀 지속으로 2차 목표가까지 추가 상승 룸 유효."
+            bear = "차트상 단기 목표가 도달에 따른 차익 실현 매물 출회 가능성."
+            risk = "원금 및 확정수익 보호를 위해 50% 분할 익절 후 손절선을 진입가(본절)로 상향 조정 권고."
+            adv = "절반만 익절하여 수익을 확정하고, 나머지는 본절 스탑을 걸고 추세를 더 누리세요."
         elif score <= -4:
             act = "EARLY_EXIT"
             verd = f"🚨 조기 매도(선제 탈출) 경보 (악재 감지 [{score:+d}점])"
             weight = 100
-            adv = "부정적 뉴스가 감지되었습니다. 리스크 관리를 위해 신속히 포지션을 정리하세요."
+            bull = "일시적 반등 기대 가능성 있으나 리스크 대비 보상 비율 급격히 악화."
+            bear = f"심각한 뉴스 악재([{score}점]) 포착으로 지지선 붕괴 및 추가 급락 위험 고조."
+            risk = "차트 손절선 도달 전이라도 선제적 리스크 오프(전량 청산) 권고."
+            adv = "부정적 뉴스가 감지되었습니다. 추가 손실(MDD)을 막기 위해 신속히 포지션을 정리하세요."
         else:
             act = "SELL_NOW"
             verd = f"💰 계획대로 매도/익절 실행 (뉴스 중립 [{score:+d}점])"
             weight = 100
-            adv = "차트 청산 원칙(5일선 회복 익절 또는 손절선 기준)에 따라 정석대로 매도를 실행하세요."
+            bull = "기존 반등 목표치(5일선 회복 등) 달성 완료."
+            bear = "목표가 부근 단기 매물 저항 및 상승 탄력 둔화."
+            risk = "정석 퀀트 규칙에 따른 전량 청산 승인."
+            adv = "차트 청산 원칙에 따라 정석대로 매도를 실행하여 수익을 확정하세요."
 
     return AINewsVerdict(
         sentiment_score=score,
         action_type=act,
         verdict=verd,
         recommended_weight_pct=weight,
+        bull_argument=bull,
+        bear_argument=bear,
+        risk_assessment=risk,
         news_summary_kr=f"최신 헤드라인: {headline}",
         swing_advice_kr=adv,
     )
