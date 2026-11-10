@@ -1,36 +1,12 @@
 {
-  "SPY": {
-    "name": "S&P 500 지수 ETF",
-    "entry_date": "2026-11-07",
-    "entry_price": 735.29,
-    "highest_price": 735.29,
-    "stop_loss": 710.84,
-    "target_1": 763.08,
-    "target_2": 779.75,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
-  "SOXX": {
-    "name": "필라델피아 반도체 ETF",
-    "entry_date": "2026-11-07",
-    "entry_price": 136.53,
-    "highest_price": 136.53,
-    "stop_loss": 117.58,
-    "target_1": 158.07,
-    "target_2": 170.99,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
-  "SMH": {
-    "name": "반에크 반도체 ETF",
-    "entry_date": "2026-11-07",
-    "entry_price": 463.96,
-    "highest_price": 463.96,
-    "stop_loss": 409.75,
-    "target_1": 525.56,
-    "target_2": 562.52,
+  "XLE": {
+    "name": "에너지 섹터 ETF",
+    "entry_date": "2026-11-10",
+    "entry_price": 61.94,
+    "highest_price": 61.94,
+    "stop_loss": 57.93,
+    "target_1": 66.5,
+    "target_2": 69.23,
     "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
     "weight_pct": 70,
     "extended_once": false
