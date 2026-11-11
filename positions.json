@@ -1,14 +1,1 @@
-{
-  "XLE": {
-    "name": "에너지 섹터 ETF",
-    "entry_date": "2026-11-10",
-    "entry_price": 61.94,
-    "highest_price": 61.94,
-    "stop_loss": 57.93,
-    "target_1": 66.5,
-    "target_2": 69.23,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  }
-}
+{}
