@@ -1,1 +1,26 @@
-{}
+{
+  "USO": {
+    "name": "WTI 원유 선물 ETF",
+    "entry_date": "2026-11-12",
+    "entry_price": 141.45,
+    "highest_price": 141.45,
+    "stop_loss": 128.13,
+    "target_1": 156.58,
+    "target_2": 165.66,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 70,
+    "extended_once": false
+  },
+  "IBIT": {
+    "name": "현물 비트코인 ETF",
+    "entry_date": "2026-11-12",
+    "entry_price": 41.68,
+    "highest_price": 41.68,
+    "stop_loss": 38.84,
+    "target_1": 44.91,
+    "target_2": 46.84,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 40,
+    "extended_once": false
+  }
+}
