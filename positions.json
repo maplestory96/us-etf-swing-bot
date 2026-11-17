@@ -1,1 +1,98 @@
-{}
+{
+  "SPY": {
+    "name": "S&P 500 지수 ETF",
+    "entry_date": "2026-11-17",
+    "entry_price": 739.95,
+    "highest_price": 739.95,
+    "stop_loss": 710.23,
+    "target_1": 773.72,
+    "target_2": 793.98,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 40,
+    "extended_once": false
+  },
+  "QQQ": {
+    "name": "나스닥 100 지수 ETF",
+    "entry_date": "2026-11-17",
+    "entry_price": 661.75,
+    "highest_price": 661.75,
+    "stop_loss": 619.44,
+    "target_1": 709.83,
+    "target_2": 738.68,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 70,
+    "extended_once": false
+  },
+  "DIA": {
+    "name": "다우존스 30 지수 ETF",
+    "entry_date": "2026-11-17",
+    "entry_price": 515.68,
+    "highest_price": 515.68,
+    "stop_loss": 498.0,
+    "target_1": 535.77,
+    "target_2": 547.83,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 70,
+    "extended_once": false
+  },
+  "IWM": {
+    "name": "러셀 2000 중소형주 ETF",
+    "entry_date": "2026-11-17",
+    "entry_price": 272.94,
+    "highest_price": 272.94,
+    "stop_loss": 260.6,
+    "target_1": 286.96,
+    "target_2": 295.38,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 70,
+    "extended_once": false
+  },
+  "XLK": {
+    "name": "기술주 섹터 ETF",
+    "entry_date": "2026-11-17",
+    "entry_price": 164.76,
+    "highest_price": 164.76,
+    "stop_loss": 150.61,
+    "target_1": 180.84,
+    "target_2": 190.49,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 70,
+    "extended_once": false
+  },
+  "UPRO": {
+    "name": "S&P 500 3배 레버리지 ETF",
+    "entry_date": "2026-11-17",
+    "entry_price": 130.68,
+    "highest_price": 130.68,
+    "stop_loss": 114.72,
+    "target_1": 148.81,
+    "target_2": 159.69,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 70,
+    "extended_once": false
+  },
+  "IBIT": {
+    "name": "현물 비트코인 ETF",
+    "entry_date": "2026-11-17",
+    "entry_price": 36.79,
+    "highest_price": 36.79,
+    "stop_loss": 33.48,
+    "target_1": 40.56,
+    "target_2": 42.81,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 70,
+    "extended_once": false
+  },
+  "XLY": {
+    "name": "임의소비재 섹터 ETF",
+    "entry_date": "2026-11-17",
+    "entry_price": 118.15,
+    "highest_price": 118.15,
+    "stop_loss": 112.36,
+    "target_1": 124.73,
+    "target_2": 128.68,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 70,
+    "extended_once": false
+  }
+}
