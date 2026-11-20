@@ -23,18 +23,6 @@
     "weight_pct": 70,
     "extended_once": false
   },
-  "DIA": {
-    "name": "다우존스 30 지수 ETF",
-    "entry_date": "2026-11-19",
-    "entry_price": 501.73,
-    "highest_price": 501.73,
-    "stop_loss": 482.35,
-    "target_1": 523.75,
-    "target_2": 536.97,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
   "XLE": {
     "name": "에너지 섹터 ETF",
     "entry_date": "2026-11-19",
@@ -59,16 +47,16 @@
     "weight_pct": 70,
     "extended_once": false
   },
-  "XLF": {
-    "name": "금융주 섹터 ETF",
-    "entry_date": "2026-11-19",
-    "entry_price": 56.42,
-    "highest_price": 56.42,
-    "stop_loss": 54.09,
-    "target_1": 59.07,
-    "target_2": 60.66,
+  "XLV": {
+    "name": "헬스케어 섹터 ETF",
+    "entry_date": "2026-11-20",
+    "entry_price": 177.46,
+    "highest_price": 177.46,
+    "stop_loss": 169.2,
+    "target_1": 186.85,
+    "target_2": 192.49,
     "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
+    "weight_pct": 40,
     "extended_once": false
   }
 }
