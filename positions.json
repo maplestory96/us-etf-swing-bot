@@ -1,28 +1,4 @@
 {
-  "QQQ": {
-    "name": "나스닥 100 지수 ETF",
-    "entry_date": "2026-11-17",
-    "entry_price": 661.75,
-    "highest_price": 661.75,
-    "stop_loss": 619.44,
-    "target_1": 709.83,
-    "target_2": 738.68,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
-  "SPY": {
-    "name": "S&P 500 지수 ETF",
-    "entry_date": "2026-11-19",
-    "entry_price": 730.2,
-    "highest_price": 730.2,
-    "stop_loss": 698.69,
-    "target_1": 766.0,
-    "target_2": 787.49,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  },
   "XLE": {
     "name": "에너지 섹터 ETF",
     "entry_date": "2026-11-19",
@@ -39,7 +15,7 @@
     "name": "WTI 원유 선물 ETF",
     "entry_date": "2026-11-19",
     "entry_price": 136.11,
-    "highest_price": 136.11,
+    "highest_price": 138.09,
     "stop_loss": 123.47,
     "target_1": 150.48,
     "target_2": 159.1,
@@ -47,16 +23,28 @@
     "weight_pct": 70,
     "extended_once": false
   },
-  "XLV": {
-    "name": "헬스케어 섹터 ETF",
-    "entry_date": "2026-11-20",
-    "entry_price": 177.46,
-    "highest_price": 177.46,
-    "stop_loss": 169.2,
-    "target_1": 186.85,
-    "target_2": 192.49,
+  "DIA": {
+    "name": "다우존스 30 지수 ETF",
+    "entry_date": "2026-11-21",
+    "entry_price": 490.79,
+    "highest_price": 490.79,
+    "stop_loss": 470.47,
+    "target_1": 513.88,
+    "target_2": 527.74,
     "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 40,
+    "weight_pct": 70,
+    "extended_once": false
+  },
+  "XLF": {
+    "name": "금융주 섹터 ETF",
+    "entry_date": "2026-11-21",
+    "entry_price": 55.58,
+    "highest_price": 55.58,
+    "stop_loss": 53.17,
+    "target_1": 58.31,
+    "target_2": 59.95,
+    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
+    "weight_pct": 70,
     "extended_once": false
   }
 }
