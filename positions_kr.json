@@ -1,12 +1,12 @@
 {
-  "091170.KS": {
-    "name": "KODEX 은행",
-    "entry_date": "2026-11-24",
-    "entry_price": 14420.0,
-    "highest_price": 14420.0,
-    "stop_loss": 13843.0,
-    "target_1": 14366.0,
-    "target_2": 15574.0,
+  "143860.KS": {
+    "name": "TIGER 헬스케어",
+    "entry_date": "2026-11-25",
+    "entry_price": 32920.0,
+    "highest_price": 32920.0,
+    "stop_loss": 31603.0,
+    "target_1": 32826.0,
+    "target_2": 35554.0,
     "strategy": "💎 [K-원자재/매크로 과매도 반등 타점 포착]",
     "weight_pct": 70,
     "extended_once": false
