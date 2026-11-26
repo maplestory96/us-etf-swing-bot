@@ -1,14 +1,1 @@
-{
-  "USO": {
-    "name": "WTI 원유 선물 ETF",
-    "entry_date": "2026-11-19",
-    "entry_price": 136.11,
-    "highest_price": 138.09,
-    "stop_loss": 123.47,
-    "target_1": 150.48,
-    "target_2": 159.1,
-    "strategy": "💎 [매수-과매도반등: 단기 급락 스나이핑]",
-    "weight_pct": 70,
-    "extended_once": false
-  }
-}
+{}
